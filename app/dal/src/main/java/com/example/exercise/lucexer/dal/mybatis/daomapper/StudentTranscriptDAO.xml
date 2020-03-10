@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.exercise.lucexer.dal.mybatis.dao.StudentTranscriptDAO">
+
+    <resultMap id="BaseResultMap" type="com.example.exercise.lucexer.dal.mybatis.domain.StudentTranscriptDO">
+        <id column="studentId" jdbcType="BIGINT" property="studentId"/>
+        <result column="courseNames" jdbcType="VARCHAR" property="courseNames"/>
+        <result column="courseScores" jdbcType="VARCHAR" property="courseScores"/>
+    </resultMap>
+
+
+    <select id="selectByStudentRange" resultMap="BaseResultMap">
+        select
+        studentId, GROUP_CONCAT(courseName) courseNames, GROUP_CONCAT(score) courseScores
+        from coursescore
+        where studentId &gt;= #{studentIdFrom,jdbcType=BIGINT} and studentId &lt; #{studentIdTo,jdbcType=BIGINT}
+        group by studentId
+    </select>
+
+</mapper>

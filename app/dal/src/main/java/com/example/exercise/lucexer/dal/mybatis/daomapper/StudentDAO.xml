@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.exercise.lucexer.dal.mybatis.dao.StudentDAO">
+    <resultMap id="BaseResultMap" type="com.example.exercise.lucexer.dal.mybatis.domain.StudentDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="TINYINT" property="age"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="sex" jdbcType="TINYINT" property="sex"/>
+        <result column="grade" jdbcType="TINYINT" property="grade"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, name, age, address, sex, grade
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from student
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectByNameExactly" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from student
+        where name = #{name,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByNameLikely" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from student
+        where name like "%"#{name,jdbcType=VARCHAR}"%"
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from student
+    where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.exercise.lucexer.dal.mybatis.domain.StudentDO">
+    insert into student (id, name, age,
+      address, sex, grade
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{age,jdbcType=TINYINT},
+      #{address,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, #{grade,jdbcType=TINYINT}
+      )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.example.exercise.lucexer.dal.mybatis.domain.StudentDO">
+        insert into student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="grade != null">
+                grade,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=TINYINT},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=TINYINT},
+            </if>
+            <if test="grade != null">
+                #{grade,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.exercise.lucexer.dal.mybatis.domain.StudentDO">
+        update student
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                age = #{age,jdbcType=TINYINT},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=TINYINT},
+            </if>
+            <if test="grade != null">
+                grade = #{grade,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.example.exercise.lucexer.dal.mybatis.domain.StudentDO">
+    update student
+    set name = #{name,jdbcType=VARCHAR},
+      age = #{age,jdbcType=TINYINT},
+      address = #{address,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
+      grade = #{grade,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="selectStudentsByIdRange" resultType="com.example.exercise.lucexer.dal.mybatis.domain.StudentDO">
+        select
+        <include refid="Base_Column_List"/>
+        from student
+        where id &gt;= #{fromId,jdbcType=BIGINT} and id &lt; #{toId,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryMaxMinIdInfo" resultType="com.example.exercise.lucexer.dal.mybatis.domain.StudentMaxMinIdInfoDO">
+        select max(id) as maxId, min(id) minId, count(1) totalCount from student
+    </select>
+
+</mapper>
