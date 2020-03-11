@@ -1,7 +1,5 @@
 package com.example.exercise.lucexer.dal.mybatis.domain;
 
-import java.util.List;
-
 /**
  * StudentTranscriptDO
  *
@@ -10,13 +8,27 @@ import java.util.List;
  */
 public class StudentTranscriptDO {
 
-    private static final String GROUP_CONCAT_SEPARATOR = ",";
+    public static final String GROUP_CONCAT_SEPARATOR = ",";
 
     private Long                studentId;
+
+    private String              name;
+
+    private Integer             age;
+
+    private String              address;
+
+    private Integer             sex;
+
+    private Integer             grade;
 
     private String              courseNames;
 
     private String              courseScores;
+
+    private String              scoreIds;
+
+    private String              scoreTimestamps;
 
     public Long getStudentId() {
         return studentId;
@@ -24,6 +36,46 @@ public class StudentTranscriptDO {
 
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
     }
 
     public String getCourseNames() {
@@ -40,6 +92,22 @@ public class StudentTranscriptDO {
 
     public void setCourseScores(String courseScores) {
         this.courseScores = courseScores;
+    }
+
+    public String getScoreIds() {
+        return scoreIds;
+    }
+
+    public void setScoreIds(String scoreIds) {
+        this.scoreIds = scoreIds;
+    }
+
+    public String getScoreTimestamps() {
+        return scoreTimestamps;
+    }
+
+    public void setScoreTimestamps(String scoreTimestamps) {
+        this.scoreTimestamps = scoreTimestamps;
     }
 
 }

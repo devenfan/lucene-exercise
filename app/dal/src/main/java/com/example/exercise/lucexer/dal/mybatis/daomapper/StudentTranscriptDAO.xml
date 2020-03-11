@@ -4,17 +4,33 @@
 
     <resultMap id="BaseResultMap" type="com.example.exercise.lucexer.dal.mybatis.domain.StudentTranscriptDO">
         <id column="studentId" jdbcType="BIGINT" property="studentId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="TINYINT" property="age"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="sex" jdbcType="TINYINT" property="sex"/>
+        <result column="grade" jdbcType="TINYINT" property="grade"/>
         <result column="courseNames" jdbcType="VARCHAR" property="courseNames"/>
         <result column="courseScores" jdbcType="VARCHAR" property="courseScores"/>
+        <result column="scoreIds" jdbcType="VARCHAR" property="scoreIds"/>
+        <result column="scoreTimestamps" jdbcType="VARCHAR" property="scoreTimestamps"/>
     </resultMap>
 
-
     <select id="selectByStudentRange" resultMap="BaseResultMap">
-        select
-        studentId, GROUP_CONCAT(courseName) courseNames, GROUP_CONCAT(score) courseScores
-        from coursescore
-        where studentId &gt;= #{studentIdFrom,jdbcType=BIGINT} and studentId &lt; #{studentIdTo,jdbcType=BIGINT}
-        group by studentId
+        select * from
+        (
+        SELECT
+        studentId,
+        GROUP_CONCAT( courseName ) courseNames,
+        GROUP_CONCAT( score ) courseScores,
+        GROUP_CONCAT( id ) scoreIds,
+        GROUP_CONCAT( time ) scoreTimestamps
+        FROM
+        coursescore
+        WHERE
+        studentId &gt;= #{studentIdFrom,jdbcType=BIGINT} and studentId &lt; #{studentIdTo,jdbcType=BIGINT}
+        GROUP BY
+        studentId
+        ) a inner join student b ON a.studentId = b.id
     </select>
 
 </mapper>

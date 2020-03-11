@@ -1,6 +1,7 @@
 package com.example.exercise.lucexer.demo;
 
-import com.example.exercise.lucexer.dal.DalConfiguration;
+import com.example.exercise.lucexer.dal.lucene.LuceneDalConfiguration;
+import com.example.exercise.lucexer.dal.mybatis.MybatisDalConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,8 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @ComponentScans({ @ComponentScan("com.example.exercise.lucexer"), })
-@Import(DalConfiguration.class)
-@EnableTransactionManagement
+@Import({ MybatisDalConfiguration.class, LuceneDalConfiguration.class })
 @SpringBootApplication
 public class DemoApplication {
 

@@ -2,8 +2,8 @@ package com.example.exercise.lucexer.demo;
 
 import javax.annotation.Resource;
 
-import com.example.exercise.lucexer.dal.mybatis.domain.StudentTranscriptDO;
 import com.example.exercise.lucexer.demo.biz.DemoBizService;
+import com.example.exercise.lucexer.sync.IndexDataSyncManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 /**
  * DemoController
@@ -28,6 +26,9 @@ public class DemoController {
 
     @Resource
     private DemoBizService demoBizService;
+
+    @Resource
+    private IndexDataSyncManager indexDataSyncManager;
 
     @RequestMapping("/search/{id}")
     public @ResponseBody Object searchById(@PathVariable("id") Long id) {
@@ -61,4 +62,15 @@ public class DemoController {
         return demoBizService.queryStudentTranscripts(fromStudentId, toStudentId);
     }
 
+    @RequestMapping("/sync/all")
+    public @ResponseBody Object syncAll() {
+        indexDataSyncManager.syncAll();
+        return "OK";
+    }
+
+    @RequestMapping("/sync/range")
+    public @ResponseBody Object syncRange(@RequestParam("from") Long fromStudentId, @RequestParam("to") Long toStudentId) {
+        indexDataSyncManager.syncRange(fromStudentId, toStudentId);
+        return "OK";
+    }
 }

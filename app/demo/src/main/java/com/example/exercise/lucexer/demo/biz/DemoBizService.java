@@ -11,7 +11,6 @@ import com.example.exercise.lucexer.dal.mybatis.domain.StudentDO;
 import com.example.exercise.lucexer.dal.mybatis.domain.StudentMaxMinIdInfoDO;
 import com.example.exercise.lucexer.dal.mybatis.domain.StudentTranscriptDO;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DemoBizService {
@@ -25,12 +24,10 @@ public class DemoBizService {
     @Resource
     private StudentTranscriptDAO studentTranscriptDAO;
 
-    @Transactional
     public StudentDO findStudentById(Long id) {
         return studentDAO.selectByPrimaryKey(id);
     }
 
-    @Transactional
     public List<StudentDO> findStudentsByName(String name, boolean exactly) {
         if (exactly) {
             return studentDAO.selectByNameExactly(name);
