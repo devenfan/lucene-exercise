@@ -2,14 +2,7 @@ package com.example.exercise.lucexer.dal.lucene.domapper;
 
 import com.example.exercise.lucexer.dal.lucene.utils.LuceneDocAnno;
 import com.example.exercise.lucexer.dal.lucene.utils.LuceneFieldAnno;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.DoublePoint;
-import org.apache.lucene.document.IntPoint;
-import org.apache.lucene.document.LongPoint;
-import org.apache.lucene.document.NumericDocValuesField;
-import org.apache.lucene.document.SortedDocValuesField;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.util.BytesRef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +51,9 @@ public abstract class AbstractLuceneDomainMapper<T> implements LuceneDomainMappe
 
     @Override
     public T doc2bean(Document document) {
+        if(document == null) {
+            return null;
+        }
         T bean = null;
         try {
             bean = mappingMetaData.getBeanClass().newInstance();
@@ -76,6 +72,9 @@ public abstract class AbstractLuceneDomainMapper<T> implements LuceneDomainMappe
 
     @Override
     public Document bean2doc(T bean) {
+        if(bean == null) {
+            return null;
+        }
         Document document = new Document();
         try {
             for (Map.Entry<Field, LuceneFieldAnno> fieldFieldEntry : mappingMetaData.getBeanField2IndexFieldMap().entrySet()) {
@@ -117,26 +116,37 @@ public abstract class AbstractLuceneDomainMapper<T> implements LuceneDomainMappe
         final Object valueWithType = beanField.get(beanObj);
         org.apache.lucene.document.Field indexField = null;
         org.apache.lucene.document.Field preSortField = null;
+        org.apache.lucene.document.Field storedField = null;
         if(valueWithType != null) {
             if(indexFieldInfo.fieldType() == IntPoint.class) {
-                indexField = new IntPoint(indexFieldInfo.fieldName(), (Integer)valueWithType);
-                preSortField = indexFieldInfo.preSort() ? new NumericDocValuesField(indexFieldInfo.fieldName(), Long.valueOf(valueWithType.toString())) : null;
+                int intValue = (Integer)valueWithType;
+                indexField = new IntPoint(indexFieldInfo.fieldName(), intValue);
+                preSortField = indexFieldInfo.preSort() ? new NumericDocValuesField(indexFieldInfo.fieldName(), intValue) : null;
+                storedField = indexFieldInfo.stored() ? new StoredField(indexFieldInfo.fieldName(), intValue) : null;
             } else if(indexFieldInfo.fieldType() == LongPoint.class) {
-                indexField = new LongPoint(indexFieldInfo.fieldName(), (Long)valueWithType);
-                preSortField = indexFieldInfo.preSort() ? new NumericDocValuesField(indexFieldInfo.fieldName(), Long.valueOf(valueWithType.toString())) : null;
+                long longValue = (Long)valueWithType;
+                indexField = new LongPoint(indexFieldInfo.fieldName(), longValue);
+                preSortField = indexFieldInfo.preSort() ? new NumericDocValuesField(indexFieldInfo.fieldName(), longValue) : null;
+                storedField = indexFieldInfo.stored() ? new StoredField(indexFieldInfo.fieldName(), longValue) : null;
             } else if(indexFieldInfo.fieldType() == DoublePoint.class) {
-                indexField = new DoublePoint(indexFieldInfo.fieldName(), (Double)valueWithType);
+                double doubleValue = (Double)valueWithType;
+                indexField = new DoublePoint(indexFieldInfo.fieldName(), doubleValue);
+                preSortField = indexFieldInfo.preSort() ? new DoubleDocValuesField(indexFieldInfo.fieldName(), doubleValue) : null;
+                storedField = indexFieldInfo.stored() ? new StoredField(indexFieldInfo.fieldName(), doubleValue) : null;
             } else if(indexFieldInfo.fieldType() == StringField.class) {
-                indexField = new StringField(indexFieldInfo.fieldName(), valueWithType.toString(), org.apache.lucene.document.Field.Store.YES);
+                indexField = new StringField(indexFieldInfo.fieldName(), valueWithType.toString(), indexFieldInfo.stored() ? org.apache.lucene.document.Field.Store.YES : org.apache.lucene.document.Field.Store.NO);
                 preSortField = indexFieldInfo.preSort() ? new SortedDocValuesField(indexFieldInfo.fieldName(), new BytesRef(valueWithType.toString())) : null;
             } else if(indexFieldInfo.fieldType() == TextField.class) {
-                indexField = new TextField(indexFieldInfo.fieldName(), valueWithType.toString(), org.apache.lucene.document.Field.Store.YES);
+                indexField = new TextField(indexFieldInfo.fieldName(), valueWithType.toString(), indexFieldInfo.stored() ? org.apache.lucene.document.Field.Store.YES : org.apache.lucene.document.Field.Store.NO);
             } else {
                 throw new IllegalStateException("Lucene Filed Type not supported: " + indexFieldInfo.fieldType());
             }
             document.add(indexField);
             if(preSortField != null) {
                 document.add(preSortField);
+            }
+            if(storedField != null) {
+                document.add(storedField);
             }
         }
 

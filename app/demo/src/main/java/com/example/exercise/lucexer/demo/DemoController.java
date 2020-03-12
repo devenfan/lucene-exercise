@@ -2,6 +2,7 @@ package com.example.exercise.lucexer.demo;
 
 import javax.annotation.Resource;
 
+import com.example.exercise.lucexer.dal.lucene.dao.StudentTranscriptLuceneDAO;
 import com.example.exercise.lucexer.demo.biz.DemoBizService;
 import com.example.exercise.lucexer.sync.IndexDataSyncManager;
 import org.slf4j.Logger;
@@ -22,22 +23,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class DemoController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger               logger = LoggerFactory.getLogger(getClass());
 
     @Resource
-    private DemoBizService demoBizService;
+    private DemoBizService             demoBizService;
 
     @Resource
-    private IndexDataSyncManager indexDataSyncManager;
+    private IndexDataSyncManager       indexDataSyncManager;
 
-    @RequestMapping("/search/{id}")
-    public @ResponseBody Object searchById(@PathVariable("id") Long id) {
+    @Resource
+    private StudentTranscriptLuceneDAO studentTranscriptLuceneDAO;
+
+    @RequestMapping("/student/{id}")
+    public @ResponseBody Object findStudentById(@PathVariable("id") Long id) {
         logger.info("http searchById: {}", id);
         return demoBizService.findStudentById(id);
     }
 
-    @RequestMapping("/search")
-    public @ResponseBody Object searchByName(@RequestParam("name") String name) {
+    @RequestMapping("/student")
+    public @ResponseBody Object findStudentsByName(@RequestParam("name") String name) {
         logger.info("http searchByName: {}", name);
         return demoBizService.findStudentsByName(name, false);
     }
@@ -72,5 +76,25 @@ public class DemoController {
     public @ResponseBody Object syncRange(@RequestParam("from") Long fromStudentId, @RequestParam("to") Long toStudentId) {
         indexDataSyncManager.syncRange(fromStudentId, toStudentId);
         return "OK";
+    }
+
+    @RequestMapping("/search/familyName/{familyName}")
+    public @ResponseBody Object searchByFamilyName(@PathVariable("familyName") String familyName) {
+        return studentTranscriptLuceneDAO.queryByFamilyName(familyName);
+    }
+
+    @RequestMapping("/search/age")
+    public @ResponseBody Object searchByAgeRange(@RequestParam("from") Integer fromAge, @RequestParam("to") Integer toAge) {
+        return studentTranscriptLuceneDAO.queryByAgeRange(fromAge, toAge);
+    }
+
+    @RequestMapping("/search/byCityAreaAndScoreLimit")
+    public @ResponseBody Object searchCityAreaAndScoreLimit(@RequestParam("cityArea") String cityArea, @RequestParam("scoreLimit") Integer scoreLimit) {
+        return studentTranscriptLuceneDAO.queryByCityAreaAndScoreLimit(cityArea, scoreLimit);
+    }
+
+    @RequestMapping("/search/top100BySexAndHouseNumber")
+    public @ResponseBody Object searchCityAreaAndScoreLimit(@RequestParam("sex") String sex, @RequestParam("houseNumber") String houseNumber) {
+        return studentTranscriptLuceneDAO.queryTop100BySexAndHouseNumber(sex, houseNumber);
     }
 }

@@ -30,4 +30,9 @@ public @interface LuceneFieldAnno {
      * 是否支持预排序，仅数值类型和String类型可以设置为true
      */
     boolean preSort() default false;
+
+    /**
+     * 是否支持存储
+     */
+    boolean stored() default true;
 }

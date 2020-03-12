@@ -157,14 +157,20 @@ public class IndexDataSyncManager {
                 String courseName = courseNames[i];
                 Double courseScore = Double.parseDouble(courseScores[i]);
                 sumScore += courseScore;
-                if (highScore < courseScore) {
-                    highScore = courseScore;
-                }
-                if (lowScore > courseScore) {
+                if(i == 0) {
                     lowScore = courseScore;
+                    highScore = courseScore;
+                } else {
+                    if (highScore < courseScore) {
+                        highScore = courseScore;
+                    }
+                    if (lowScore > courseScore) {
+                        lowScore = courseScore;
+                    }
                 }
                 if (i == (courseNames.length - 1)) {
                     avgScore = sumScore / courseNames.length;
+                    avgScore = (double) Math.round(avgScore * 100) / 100 ;
                 }
                 if (StringUtils.equals(courseName, IndexDataSyncConstants.COURSE_NAME_YUWEN)) {
                     luceneDO.setScoreYuwen(courseScore);

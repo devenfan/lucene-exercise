@@ -20,7 +20,7 @@ public class StudentTranscriptLuceneDO {
     /**
      * 学生id，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "studentId", fieldType = LongPoint.class)
+    @LuceneFieldAnno(fieldName = "studentId", fieldType = LongPoint.class, preSort = true)
     private Long studentId;
 
     /**
@@ -38,7 +38,7 @@ public class StudentTranscriptLuceneDO {
     /**
      * 年龄，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "age", fieldType = IntPoint.class)
+    @LuceneFieldAnno(fieldName = "age", fieldType = IntPoint.class, preSort = true)
     private Integer age;
 
     /**
@@ -74,13 +74,13 @@ public class StudentTranscriptLuceneDO {
     /**
      * 是否住别墅（0和1）, 作为数值型，分词且索引，并且预索引
      */
-    @LuceneFieldAnno(fieldName = "villaHouse", fieldType = IntPoint.class, preSort = true)
+    @LuceneFieldAnno(fieldName = "villaHouse", fieldType = IntPoint.class)
     private Integer villaHouse;
 
     /**
      * 门牌号, 作为文本，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "houseNumber", fieldType = TextField.class)
+    @LuceneFieldAnno(fieldName = "houseNumber", fieldType = TextField.class, preSort = true)
     private String houseNumber;
 
     /**
@@ -92,49 +92,49 @@ public class StudentTranscriptLuceneDO {
     /**
      * 年级，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "grade", fieldType = IntPoint.class)
+    @LuceneFieldAnno(fieldName = "grade", fieldType = IntPoint.class, preSort = true)
     private Integer grade;
 
     /**
      * 语文分数，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "scoreYuwen", fieldType = DoublePoint.class)
+    @LuceneFieldAnno(fieldName = "scoreYuwen", fieldType = DoublePoint.class, preSort = true)
     private Double scoreYuwen;
 
     /**
      * 数学分数，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "scoreShuxue", fieldType = DoublePoint.class)
+    @LuceneFieldAnno(fieldName = "scoreShuxue", fieldType = DoublePoint.class, preSort = true)
     private Double scoreShuxue;
 
     /**
      * 化学分数，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "scoreHuaxue", fieldType = DoublePoint.class)
+    @LuceneFieldAnno(fieldName = "scoreHuaxue", fieldType = DoublePoint.class, preSort = true)
     private Double scoreHuaxue;
 
     /**
      * 个人最高分，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "scoreHigh", fieldType = DoublePoint.class)
+    @LuceneFieldAnno(fieldName = "scoreHigh", fieldType = DoublePoint.class, preSort = true)
     private Double scoreHigh;
 
     /**
      * 个人最低分，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "scoreLow", fieldType = DoublePoint.class)
+    @LuceneFieldAnno(fieldName = "scoreLow", fieldType = DoublePoint.class, preSort = true)
     private Double scoreLow;
 
     /**
      * 个人平均分，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "scoreAvg", fieldType = DoublePoint.class)
+    @LuceneFieldAnno(fieldName = "scoreAvg", fieldType = DoublePoint.class, preSort = true)
     private Double scoreAvg;
 
     /**
      * 个人总分，数值型，分词且索引
      */
-    @LuceneFieldAnno(fieldName = "scoreSum", fieldType = DoublePoint.class)
+    @LuceneFieldAnno(fieldName = "scoreSum", fieldType = DoublePoint.class, preSort = true)
     private Double scoreSum;
 
     public Long getStudentId() {

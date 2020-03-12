@@ -36,8 +36,17 @@ public class LuceneDalConfiguration {
     @Value("${lucene.index.dir}")
     private String luceneIndexDir = "c:/temp/lucene7index/exercise";
 
-    public String getLuceneIndexDir() {
+    public String getIndexDir() {
         return luceneIndexDir;
+    }
+
+    public Path getIndexPath() {
+        Path path = Paths.get(luceneIndexDir);
+        File file = path.toFile();
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return path;
     }
 
     @Bean
@@ -47,11 +56,7 @@ public class LuceneDalConfiguration {
 
     @Bean
     public Directory indexDirectory() throws IOException {
-        Path path = Paths.get(luceneIndexDir);
-        File file = path.toFile();
-        if (!file.exists()) {
-            file.mkdirs();
-        }
+        Path path = getIndexPath();
         return FSDirectory.open(path);
     }
 
