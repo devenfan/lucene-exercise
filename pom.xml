@@ -24,13 +24,14 @@
         <maven.compiler.complerVersion>1.8</maven.compiler.complerVersion>
 
         <!-- depends -->
-        <lucene.version>7.6.0</lucene.version>
+        <lucene.version>7.7.2</lucene.version>
         <mybatis-springboot-starter.version>2.1.1</mybatis-springboot-starter.version>
         <mybatis-generator.version>1.4.0</mybatis-generator.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <guava.version>23.0</guava.version>
         <fastjson.version>1.2.66</fastjson.version>
         <hutool.version>4.6.15</hutool.version>
+        <aspectj.version>1.9.5</aspectj.version>
 
         <!-- plugins -->
         <maven.surefire.plugin>2.21.0</maven.surefire.plugin>
@@ -52,6 +53,12 @@
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-core</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <!--分组处理包-->
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-grouping</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
             <!--对分词索引查询解析-->
@@ -108,6 +115,12 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
             </dependency>
 
         </dependencies>

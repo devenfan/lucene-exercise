@@ -72,10 +72,10 @@ public class StudentTranscriptLuceneDO {
     private String village;
 
     /**
-     * 是否住别墅（0和1）, 作为数值型，分词且索引，并且预索引
+     * 是否住别墅（0和1）, 作为数值型，分词且索引，并且预索引（注意groupBy的字段得是字符串型，并且需要预排序）
      */
-    @LuceneFieldAnno(fieldName = "villaHouse", fieldType = IntPoint.class)
-    private Integer villaHouse;
+    @LuceneFieldAnno(fieldName = "villaHouse", fieldType = StringField.class, preSort = true)
+    private String villaHouse;
 
     /**
      * 门牌号, 作为文本，分词且索引
@@ -209,11 +209,11 @@ public class StudentTranscriptLuceneDO {
         this.village = village;
     }
 
-    public Integer getVillaHouse() {
+    public String getVillaHouse() {
         return villaHouse;
     }
 
-    public void setVillaHouse(Integer villaHouse) {
+    public void setVillaHouse(String villaHouse) {
         this.villaHouse = villaHouse;
     }
 

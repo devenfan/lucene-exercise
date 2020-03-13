@@ -29,6 +29,13 @@ public interface StudentTranscriptLuceneDAO {
     List<StudentTranscriptLuceneDO> queryByCityAreaAndScoreLimit(String cityArea, int scoreLimit);
 
     /**
+     * 查询出: 江苏省 ，门牌号是100的，前100个男的
+     */
+    List<StudentTranscriptLuceneDO> queryTop100ByProvinceAndSexAndHouseNumber(String province, String sex, String houseNumber);
+
+
+
+    /**
      * 查询出 各姓名的出现的数量 如: 王:100 ,赵:200
      */
     Map<String, Long> summaryByFamilyName();
@@ -39,12 +46,7 @@ public interface StudentTranscriptLuceneDAO {
     Map<String, Double> summaryByCityAndHuaxueFail();
 
     /**
-     * 查询出: 江苏省 ，门牌号是100的，前100个男的
-     */
-    List<StudentTranscriptLuceneDO> queryTop100BySexAndHouseNumber(String sex, String houseNumber);
-
-    /**
      * 查询出: 住别墅的人的成绩是否比不住别墅的人好
      */
-    Map<String, Double> summaryScorePerformanceByVillaHouse(boolean liveInVillaHouse);
+    Map<String, Object> summaryScorePerformanceByVillaHouse();
 }

@@ -5,7 +5,6 @@ import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * MybatisDalConfiguration
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan("com.example.exercise.lucexer.dal.mybatis")
 @MapperScan("com.example.exercise.lucexer.dal.mybatis.dao")
 @AutoConfigureAfter({ MybatisAutoConfiguration.class })
-@EnableTransactionManagement
 public class MybatisDalConfiguration {
 
 }

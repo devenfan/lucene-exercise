@@ -143,7 +143,7 @@ public class IndexDataSyncManager {
         luceneDO.setCityArea(cityArea);
         luceneDO.setHouseNumber(houseNumber);
         luceneDO.setVillage(village);
-        luceneDO.setVillaHouse(village.contains("别墅") ? 1 : 0);
+        luceneDO.setVillaHouse(village.contains("别墅") ? "1" : "0");
 
         Double highScore = 0d;
         Double lowScore = 0d;

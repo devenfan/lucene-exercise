@@ -36,6 +36,9 @@ public class LuceneDalConfiguration {
     @Value("${lucene.index.dir}")
     private String luceneIndexDir = "c:/temp/lucene7index/exercise";
 
+    @Value("${lucene.write.maxBuffer}")
+    private int luceneWriteMaxBuffer = 10000;
+
     public String getIndexDir() {
         return luceneIndexDir;
     }
@@ -63,6 +66,8 @@ public class LuceneDalConfiguration {
     @Bean
     public IndexWriter indexWriter(Directory indexDirectory, Analyzer analyzer) throws IOException {
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+        indexWriterConfig.setUseCompoundFile(true);
+        indexWriterConfig.setMaxBufferedDocs(luceneWriteMaxBuffer);
         return new IndexWriter(indexDirectory, indexWriterConfig);
     }
 

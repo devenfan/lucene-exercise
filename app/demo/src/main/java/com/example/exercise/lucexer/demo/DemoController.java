@@ -93,8 +93,23 @@ public class DemoController {
         return studentTranscriptLuceneDAO.queryByCityAreaAndScoreLimit(cityArea, scoreLimit);
     }
 
-    @RequestMapping("/search/top100BySexAndHouseNumber")
-    public @ResponseBody Object searchCityAreaAndScoreLimit(@RequestParam("sex") String sex, @RequestParam("houseNumber") String houseNumber) {
-        return studentTranscriptLuceneDAO.queryTop100BySexAndHouseNumber(sex, houseNumber);
+    @RequestMapping("/search/queryTop100ByProvinceAndSexAndHouseNumber")
+    public @ResponseBody Object searchCityAreaAndScoreLimit(@RequestParam("province") String province, @RequestParam("sex") String sex, @RequestParam("houseNumber") String houseNumber) {
+        return studentTranscriptLuceneDAO.queryTop100ByProvinceAndSexAndHouseNumber(province, sex, houseNumber);
+    }
+
+    @RequestMapping("/search/summaryByFamilyName")
+    public @ResponseBody Object summaryByFamilyName() {
+        return studentTranscriptLuceneDAO.summaryByFamilyName();
+    }
+
+    @RequestMapping("/search/summaryByCityAndHuaxueFail")
+    public @ResponseBody Object summaryByCityAndHuaxueFail() {
+        return studentTranscriptLuceneDAO.summaryByCityAndHuaxueFail();
+    }
+
+    @RequestMapping("/search/summaryScorePerformanceByVillaHouse")
+    public @ResponseBody Object summaryScorePerformanceByVillaHouse() {
+        return studentTranscriptLuceneDAO.summaryScorePerformanceByVillaHouse();
     }
 }
