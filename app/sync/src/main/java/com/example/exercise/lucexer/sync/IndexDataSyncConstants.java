@@ -14,4 +14,8 @@ public class IndexDataSyncConstants {
 
     public static final String COURSE_NAME_HUAXUE = "化学";
 
+    public static final String SYNC_TYPE_FULL = "FULL";
+
+    public static final String SYNC_TYPE_INCREMENTAL = "INCREMENTAL";
+
 }

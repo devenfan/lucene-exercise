@@ -1,15 +1,15 @@
 package com.example.exercise.lucexer.dal.lucene.dao.impl;
 
-import com.example.exercise.lucexer.dal.lucene.LuceneDalException;
-import com.example.exercise.lucexer.dal.lucene.domain.StudentTranscriptLuceneDO;
+import java.io.IOException;
+import java.util.Collection;
+
+import javax.annotation.Resource;
+
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.CachingCollector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.grouping.FirstPassGroupingCollector;
@@ -21,12 +21,6 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.BytesRef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * AbstractLuceneDAO
@@ -42,18 +36,24 @@ public abstract class AbstractLuceneDAO {
     protected Directory indexDirectory;
 
     @Resource
+    protected IndexWriter indexWriter;
+
+    @Resource
     protected Analyzer analyzer;
 
 
     protected long doSelectCount(IndexSearcher indexSearcher, Query query) throws IOException {
+        logger.debug("[doSelectCount] query: {}", query);
         return indexSearcher.count(query);
     }
 
     protected TopDocs doSelectDocs(IndexSearcher indexSearcher, Query query, int limit, Sort sort) throws IOException {
+        logger.debug("[doSelectDocs] query: {}  limit: {}  sort: {} ", query);
         return indexSearcher.search(query, limit, sort);
     }
 
-    protected TopGroups<BytesRef> doGroupBy(IndexSearcher indexSearcher, Query query, String groupByField, int topNGroups, int maxDocsPerGroup) throws IOException {
+    protected TopGroups<BytesRef> doGroupBy(IndexSearcher indexSearcher, Query filterQuery, String groupByField, int topNGroups, int maxDocsPerGroup) throws IOException {
+        logger.debug("[doGroupBy] filterQuery: {}  groupByField: {}  topNGroups: {}  maxDocsPerGroup: {}", filterQuery, groupByField, topNGroups, maxDocsPerGroup);
         int groupOffset = 0;
         int withinGroupOffset = 0;
         FirstPassGroupingCollector c1 = new FirstPassGroupingCollector(new TermGroupSelector(groupByField), Sort.RELEVANCE, topNGroups);
@@ -61,8 +61,7 @@ public abstract class AbstractLuceneDAO {
         double maxCacheRAMMB = 4.0;
         //Caches all docs, and optionally also scores, coming from a search, and is then able to replay them to another collector.
         CachingCollector cachedCollector = CachingCollector.create(c1, cacheScores, maxCacheRAMMB);
-//            IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-        indexSearcher.search(query, cachedCollector);
+        indexSearcher.search(filterQuery, cachedCollector);
         Collection<SearchGroup<BytesRef>> tg1 = c1.getTopGroups(groupOffset, true);
         if (tg1 == null) {
             return null;
@@ -74,14 +73,11 @@ public abstract class AbstractLuceneDAO {
             cachedCollector.replay(c2);
         } else {
             // Cache was too large; must re-execute query:
-            indexSearcher.search(query, c2);
+            indexSearcher.search(filterQuery, c2);
         }
 
         TopGroups<BytesRef> tg2 = c2.getTopGroups(withinGroupOffset);
-        //            GroupDocs<BytesRef>[] gds = tg2.groups;
-        //            for(GroupDocs<BytesRef> gd : gds) {
-        //                map.put(gd.groupValue, gd.totalHits);
-        //            }
         return tg2;
     }
+
 }

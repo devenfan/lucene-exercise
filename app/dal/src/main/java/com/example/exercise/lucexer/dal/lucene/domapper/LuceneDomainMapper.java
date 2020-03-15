@@ -8,7 +8,9 @@ package com.example.exercise.lucexer.dal.lucene.domapper;
  */
 public interface LuceneDomainMapper<T> {
 
-    T doc2bean(org.apache.lucene.document.Document document);
+    T doc2domain(org.apache.lucene.document.Document document);
 
-    org.apache.lucene.document.Document bean2doc(T bean);
+    org.apache.lucene.document.Document domain2Doc(T bean);
+
+
 }

@@ -32,7 +32,7 @@ public class StudentTranscriptLuceneDO {
     /**
      * 姓氏，作为字符串，不分词只索引
      */
-    @LuceneFieldAnno(fieldName = "familyName", fieldType = StringField.class)
+    @LuceneFieldAnno(fieldName = "familyName", fieldType = StringField.class, preSort = true)
     private String familyName;
 
     /**
@@ -50,19 +50,19 @@ public class StudentTranscriptLuceneDO {
     /**
      * 省, 作为字符串，不分词只索引
      */
-    @LuceneFieldAnno(fieldName = "province", fieldType = StringField.class)
+    @LuceneFieldAnno(fieldName = "province", fieldType = StringField.class, preSort = true)
     private String province;
 
     /**
      * 城市, 作为字符串，不分词只索引
      */
-    @LuceneFieldAnno(fieldName = "city", fieldType = StringField.class)
+    @LuceneFieldAnno(fieldName = "city", fieldType = StringField.class, preSort = true)
     private String city;
 
     /**
      * 城区, 作为字符串，不分词只索引
      */
-    @LuceneFieldAnno(fieldName = "cityArea", fieldType = StringField.class)
+    @LuceneFieldAnno(fieldName = "cityArea", fieldType = StringField.class, preSort = true)
     private String cityArea;
 
     /**

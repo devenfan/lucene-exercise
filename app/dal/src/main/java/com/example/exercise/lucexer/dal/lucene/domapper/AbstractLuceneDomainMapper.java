@@ -50,7 +50,7 @@ public abstract class AbstractLuceneDomainMapper<T> implements LuceneDomainMappe
     }
 
     @Override
-    public T doc2bean(Document document) {
+    public T doc2domain(Document document) {
         if(document == null) {
             return null;
         }
@@ -71,7 +71,7 @@ public abstract class AbstractLuceneDomainMapper<T> implements LuceneDomainMappe
     }
 
     @Override
-    public Document bean2doc(T bean) {
+    public Document domain2Doc(T bean) {
         if(bean == null) {
             return null;
         }

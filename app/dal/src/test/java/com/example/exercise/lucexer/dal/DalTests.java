@@ -27,9 +27,4 @@ public class DalTests {
         System.out.println(JSON.toJSONString(obj));
     }
 
-    @Test
-    public void test1() {
-        Object obj = studentTranscriptLuceneDAO.queryByAgeRange(10, 20);
-        println(obj);
-    }
 }

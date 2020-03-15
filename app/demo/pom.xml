@@ -23,6 +23,12 @@
 
         <dependency>
             <groupId>com.example.exercise</groupId>
+            <artifactId>lucexer-search</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.example.exercise</groupId>
             <artifactId>lucexer-sync</artifactId>
             <version>${project.version}</version>
         </dependency>

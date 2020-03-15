@@ -1,9 +1,12 @@
 package com.example.exercise.lucexer.dal.lucene.dao;
 
-import com.example.exercise.lucexer.dal.lucene.domain.StudentTranscriptLuceneDO;
-
 import java.util.List;
 import java.util.Map;
+
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
+
+import com.example.exercise.lucexer.dal.lucene.domain.StudentTranscriptLuceneDO;
 
 /**
  * StudentTranscriptLuceneDAO
@@ -14,39 +17,38 @@ import java.util.Map;
 public interface StudentTranscriptLuceneDAO {
 
     /**
-     * 目标： 查询出 所有 姓"赵"的学生
+     * 查询实体列表
      */
-    List<StudentTranscriptLuceneDO> queryByFamilyName(String familyName);
+    List<StudentTranscriptLuceneDO> query(String operationName, Query query, Sort sort, int limit);
 
     /**
-     * 查询出 所有年龄在10-20的 并且从小到大排序
+     * 查询计数
      */
-    List<StudentTranscriptLuceneDO> queryByAgeRange(int ageFrom, int ageTo);
+    long count(Query filterQuery);
 
     /**
-     * 查询出 所有住在"红星区"的，并且考试成绩有一门大于90分的学生列表。
+     * 分组计数统计
      */
-    List<StudentTranscriptLuceneDO> queryByCityAreaAndScoreLimit(String cityArea, int scoreLimit);
+    Map<String, Long> groupCountByField(String operationName, Query filterQuery, String groupByField, int maxGroups, int maxDocsPerGroup);
 
     /**
-     * 查询出: 江苏省 ，门牌号是100的，前100个男的
+     * 更新单个LuceneDO
      */
-    List<StudentTranscriptLuceneDO> queryTop100ByProvinceAndSexAndHouseNumber(String province, String sex, String houseNumber);
-
-
+    boolean update(StudentTranscriptLuceneDO luceneDO);
 
     /**
-     * 查询出 各姓名的出现的数量 如: 王:100 ,赵:200
+     * 更新多个LuceneDO
      */
-    Map<String, Long> summaryByFamilyName();
+    boolean update(List<StudentTranscriptLuceneDO> luceneDOS);
 
     /**
-     * 查询出 化学考试不及格的的人各城市的占比
+     * 删除单个LuceneDO
      */
-    Map<String, Double> summaryByCityAndHuaxueFail();
+    boolean delete(StudentTranscriptLuceneDO luceneDO);
 
     /**
-     * 查询出: 住别墅的人的成绩是否比不住别墅的人好
+     * 删除多个LuceneDO
      */
-    Map<String, Object> summaryScorePerformanceByVillaHouse();
+    boolean delete(List<StudentTranscriptLuceneDO> luceneDOS);
+
 }
