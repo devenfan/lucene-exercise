@@ -8,10 +8,11 @@
 | common | 公共包      | 无  |
 | dal    | 数据访问层  | common |
 | search | 搜索程序    | common, dal  |
-| sync   | 同步成熟    | common, dal  |
-| demo   | demo       | 全部 |
+| sync   | 同步程序    | common, dal  |
 
 ## 功能说明
+
+分别启动search搜索程序（8090端口）和sync同步程序（8099端口），可以测试如下功能：
 
 1. 查询出 所有 姓"赵"的学生。  
 模糊查询  
