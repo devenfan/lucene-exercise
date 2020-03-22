@@ -1,7 +1,12 @@
-package com.example.exercise.lucexer.sync;
+package com.example.exercise.lucexer.common;
 
+import cn.hutool.core.lang.UUID;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,34 +21,44 @@ import java.util.Properties;
 public class IndexDataSyncStatusData {
 
     /**
+     * 本次同步的唯一标识
+     */
+    private String  syncUID;
+
+    /**
+     * 本次同步的保存目录
+     */
+    private String  savePath;
+
+    /**
+     * 本次同步后的目录轮换标识
+     */
+    private String  rotateFlagAfterSync;
+
+    /**
      * 本次同步的起始学生id
      */
-    private Long fromStudentId;
+    private Long    fromStudentId;
 
     /**
      * 本次同步的中止学生id
      */
-    private Long toStudentId;
+    private Long    toStudentId;
 
     /**
      * 同步完成后的最大学生id
      */
-    private Long finishStudentId;
+    private Long    finishStudentId;
 
     /**
      * 本次同步的数量
      */
-    private Long syncCount;
+    private Long    syncCount;
 
     /**
      * sync type: INCREMENTAL, FULL
      */
-    private String syncType;
-
-    /**
-     * 是否正在同步
-     */
-    private Boolean synchronizing;
+    private String  syncType;
 
     /**
      * 本次同步是否已完成
@@ -53,17 +68,41 @@ public class IndexDataSyncStatusData {
     /**
      * 是否同步成功
      */
-    private Boolean success = false;
+    private Boolean success  = false;
 
     /**
      * 同步开始时间(yyyy-MM-dd HH:mm:ss.SSS)
      */
-    private Date beginTime;
+    private Date    beginTime;
 
     /**
      * 同步结束时间(yyyy-MM-dd HH:mm:ss.SSS)
      */
-    private Date finishTime;
+    private Date    finishTime;
+
+    public String getSyncUID() {
+        return syncUID;
+    }
+
+    public void setSyncUID(String syncUID) {
+        this.syncUID = syncUID;
+    }
+
+    public String getSavePath() {
+        return savePath;
+    }
+
+    public void setSavePath(String savePath) {
+        this.savePath = savePath;
+    }
+
+    public String getRotateFlagAfterSync() {
+        return rotateFlagAfterSync;
+    }
+
+    public void setRotateFlagAfterSync(String rotateFlagAfterSync) {
+        this.rotateFlagAfterSync = rotateFlagAfterSync;
+    }
 
     public Long getFromStudentId() {
         return fromStudentId;
@@ -105,14 +144,6 @@ public class IndexDataSyncStatusData {
         this.syncType = syncType;
     }
 
-    public Boolean getSynchronizing() {
-        return synchronizing;
-    }
-
-    public void setSynchronizing(Boolean synchronizing) {
-        this.synchronizing = synchronizing;
-    }
-
     public Boolean getFinished() {
         return finished;
     }
@@ -145,38 +176,71 @@ public class IndexDataSyncStatusData {
         this.finishTime = finishTime;
     }
 
-
-    private static final String FILE_NAME = "indexSyncStatus.properties";
-
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
-    public static IndexDataSyncStatusData loadFromFile() {
-        Properties properties = new Properties();
-        try (FileInputStream in = new FileInputStream(FILE_NAME)) {
-            properties.load(in);
-            return fromProperties(properties);
+    private static final String DATE_UID_FORMAT = "yyyyMMddHHmmssSSS";
+
+    public static IndexDataSyncStatusData loadFromFile(String filePath) {
+        return loadFromFile(new File(filePath));
+    }
+
+    public static IndexDataSyncStatusData loadFromFile(File file) {
+        FileInputStream inFile = null;
+        try {
+            if(!file.exists()) {
+                return null;
+            }
+            Properties properties = new Properties();
+            inFile = new FileInputStream(file);
+            properties.load(inFile);
+            IndexDataSyncStatusData data = fromProperties(properties);
+            if(!IndexDataSyncStatusData.validate(data)) {
+                //invalid file, overwrite
+                return null;
+            }
+            return data;
         } catch (Exception ex) {
             return null;
         }
     }
 
-    public static void writeToFile(IndexDataSyncStatusData statusData) {
-        Properties properties = toProperties(statusData);
-        try (FileOutputStream oFile = new FileOutputStream(FILE_NAME)) {
-            properties.store(oFile, "索引同步状态文件");
+    public static void writeToFile(IndexDataSyncStatusData statusData, String filePath) {
+        FileOutputStream oFile = null;
+        try {
+            File dir = new File(filePath.substring(0, filePath.lastIndexOf("/")));
+            if(!dir.exists()) {
+                dir.mkdirs();
+            }
+            File file = new File(filePath);
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+            Properties properties = toProperties(statusData);
+            oFile = new FileOutputStream(file);
+            properties.store(oFile, "IndexDataSyncStatus File (Please DO NOT edit unless you known why)");
         } catch (Exception ex) {
-            throw new RuntimeException("Cannot persist " + FILE_NAME, ex);
+            throw new RuntimeException("Cannot persist IndexDataSyncStatus to File: " + filePath, ex);
+        } finally {
+            if(oFile != null) {
+                try {
+                    oFile.close();
+                } catch (IOException e) {
+                    //ignore
+                }
+            }
         }
     }
 
     public static IndexDataSyncStatusData fromProperties(Properties properties) {
         IndexDataSyncStatusData statusData = new IndexDataSyncStatusData();
+        statusData.setSyncUID(getStringValueFromProperties(properties, "syncUID"));
+        statusData.setSavePath(getStringValueFromProperties(properties, "savePath"));
+        statusData.setRotateFlagAfterSync(getStringValueFromProperties(properties, "rotateFlagAfterSync"));
         statusData.setFromStudentId(getLongValueFromProperties(properties, "fromStudentId"));
         statusData.setToStudentId(getLongValueFromProperties(properties, "toStudentId"));
         statusData.setFinishStudentId(getLongValueFromProperties(properties, "finishStudentId"));
         statusData.setSyncCount(getLongValueFromProperties(properties, "syncCount"));
         statusData.setSyncType(getStringValueFromProperties(properties, "syncType"));
-        statusData.setSynchronizing(getBooleanValueFromProperties(properties, "synchronizing"));
         statusData.setFinished(getBooleanValueFromProperties(properties, "finished"));
         statusData.setSuccess(getBooleanValueFromProperties(properties, "success"));
         statusData.setBeginTime(getDateValueFromProperties(properties, "beginTime"));
@@ -186,17 +250,38 @@ public class IndexDataSyncStatusData {
 
     public static Properties toProperties(IndexDataSyncStatusData statusData) {
         Properties properties = new Properties();
+        setValueIntoProperties("syncUID", statusData.getSyncUID(), properties);
+        setValueIntoProperties("savePath", statusData.getSavePath(), properties);
+        setValueIntoProperties("rotateFlagAfterSync", statusData.getRotateFlagAfterSync(), properties);
         setValueIntoProperties("fromStudentId", statusData.getFromStudentId(), properties);
         setValueIntoProperties("toStudentId", statusData.getToStudentId(), properties);
         setValueIntoProperties("finishStudentId", statusData.getFinishStudentId(), properties);
         setValueIntoProperties("syncCount", statusData.getSyncCount(), properties);
         setValueIntoProperties("syncType", statusData.getSyncType(), properties);
-        setValueIntoProperties("synchronizing", statusData.getSynchronizing(), properties);
         setValueIntoProperties("finished", statusData.getFinished(), properties);
         setValueIntoProperties("success", statusData.getSuccess(), properties);
         setValueIntoProperties("beginTime", statusData.getBeginTime(), properties);
         setValueIntoProperties("finishTime", statusData.getFinishTime(), properties);
         return properties;
+    }
+
+    private static boolean validate(IndexDataSyncStatusData statusData) {
+        if(StringUtils.isBlank(statusData.getSyncUID())) {
+            return false;
+        }
+        if(StringUtils.isBlank(statusData.getSyncType())) {
+            return false;
+        }
+        if(StringUtils.isBlank(statusData.getSavePath())) {
+            return false;
+        }
+        if(StringUtils.isBlank(statusData.getRotateFlagAfterSync())) {
+            return false;
+        }
+        if(statusData.getFromStudentId() == null || statusData.getToStudentId() == null) {
+            return false;
+        }
+        return true;
     }
 
     private static Long getLongValueFromProperties(Properties properties, String key) {
@@ -230,14 +315,19 @@ public class IndexDataSyncStatusData {
     }
 
     private static void setValueIntoProperties(String key, Object value, Properties properties) {
-        if(value == null) {
+        if (value == null) {
             return;
         }
-        if(value instanceof Date) {
+        if (value instanceof Date) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
             properties.setProperty(key, simpleDateFormat.format(value));
         } else {
             properties.setProperty(key, value.toString());
         }
+    }
+
+    public static String generateSyncUID() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_UID_FORMAT);
+        return simpleDateFormat.format(new Date()) + "-" + UUID.fastUUID().toString(true);
     }
 }

@@ -1,24 +1,19 @@
 package com.example.exercise.lucexer.sync.search.service;
 
-import com.example.exercise.lucexer.dal.lucene.LuceneDalException;
 import com.example.exercise.lucexer.dal.lucene.dao.StudentTranscriptLuceneDAO;
 import com.example.exercise.lucexer.dal.lucene.domain.StudentTranscriptLuceneDO;
-import com.example.exercise.lucexer.dal.lucene.utils.LuceneThreadLocalUtils;
 import org.apache.lucene.document.DoublePoint;
 import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.WildcardQuery;
-import org.apache.lucene.search.grouping.GroupDocs;
-import org.apache.lucene.search.grouping.TopGroups;
-import org.apache.lucene.util.BytesRef;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

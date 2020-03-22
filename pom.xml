@@ -28,6 +28,7 @@
         <mybatis-springboot-starter.version>2.1.1</mybatis-springboot-starter.version>
         <mybatis-generator.version>1.4.0</mybatis-generator.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
+        <commons-io.version>2.6</commons-io.version>
         <guava.version>23.0</guava.version>
         <fastjson.version>1.2.66</fastjson.version>
         <hutool.version>4.6.15</hutool.version>
@@ -98,6 +99,11 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -121,6 +127,13 @@
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
                 <version>${aspectj.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

@@ -16,6 +16,11 @@
     <dependencies>
         <dependency>
             <groupId>com.example.exercise</groupId>
+            <artifactId>lucexer-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.example.exercise</groupId>
             <artifactId>lucexer-dal</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -6,7 +6,6 @@ import java.util.Collection;
 import javax.annotation.Resource;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.CachingCollector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -17,10 +16,11 @@ import org.apache.lucene.search.grouping.SearchGroup;
 import org.apache.lucene.search.grouping.TermGroupSelector;
 import org.apache.lucene.search.grouping.TopGroups;
 import org.apache.lucene.search.grouping.TopGroupsCollector;
-import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.BytesRef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.example.exercise.lucexer.dal.lucene.LuceneDalDynamicSearcher;
 
 /**
  * AbstractLuceneDAO
@@ -30,17 +30,13 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractLuceneDAO {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger             logger = LoggerFactory.getLogger(getClass());
 
     @Resource
-    protected Directory indexDirectory;
+    protected LuceneDalDynamicSearcher dynamicSearcher;
 
     @Resource
-    protected IndexWriter indexWriter;
-
-    @Resource
-    protected Analyzer analyzer;
-
+    protected Analyzer                 analyzer;
 
     protected long doSelectCount(IndexSearcher indexSearcher, Query query) throws IOException {
         logger.debug("[doSelectCount] query: {}", query);

@@ -1,18 +1,15 @@
 package com.example.exercise.lucexer.dal.lucene.utils;
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
+import javax.annotation.Resource;
+
+import com.example.exercise.lucexer.dal.lucene.LuceneDalDynamicSearcher;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.store.Directory;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * LuceneDAOAspect
@@ -27,22 +24,22 @@ public class LuceneDAOAspect {
     private static final Logger logger = LoggerFactory.getLogger(LuceneDAOAspect.class);
 
     @Resource
-    protected Directory indexDirectory;
+    private LuceneDalDynamicSearcher dynamicSearcher;
 
     @Around("(execution(* com.example.exercise.lucexer.dal.lucene.dao.impl..*.search*(..))) || (execution(* com.example.exercise.lucexer.dal.lucene.dao.impl..*.query*(..))) || (execution(* com.example.exercise.lucexer.dal.lucene.dao.impl..*.sum*(..))) || (execution(* com.example.exercise.lucexer.dal.lucene.dao.impl..*.calc*(..))) || (execution(* com.example.exercise.lucexer.dal.lucene.dao.impl..*.count*(..))) || (execution(* com.example.exercise.lucexer.dal.lucene.dao.impl..*.group*(..)))")
     public Object aroundQuery(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
-        IndexSearcher indexSearcher = LuceneThreadLocalUtils.getIndexSearcher();
+        IndexSearcher indexSearcher = LuceneIndexSearchUtils.getIndexSearcherFromThreadLocal();
         if(indexSearcher == null) {
             //如果没有indexSearcher，就新建一个放到ThreadLocal
-            try (IndexReader indexReader = DirectoryReader.open(indexDirectory)) {
-                indexSearcher = new IndexSearcher(indexReader);
-                LuceneThreadLocalUtils.setIndexSearcher(indexSearcher);
+            try {
+                indexSearcher = dynamicSearcher.getSearcherManager().acquire();
+                LuceneIndexSearchUtils.setIndexSearcherIntoThreadLocal(indexSearcher);
                 return joinPoint.proceed();
             } catch (Throwable throwable) {
                 throw throwable;
             } finally {
-                LuceneThreadLocalUtils.setIndexSearcher(null);
+                LuceneIndexSearchUtils.setIndexSearcherIntoThreadLocal(null);
                 long endTime = System.currentTimeMillis();
                 logger.warn("{} Execution Time: {}ms", joinPoint.getSignature(), (endTime - startTime));
             }

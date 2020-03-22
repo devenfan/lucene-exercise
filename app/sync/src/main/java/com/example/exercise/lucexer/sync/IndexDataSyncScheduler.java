@@ -40,5 +40,4 @@ public class IndexDataSyncScheduler {
         logger.info("fullDataSync finished......");
     }
 
-
 }

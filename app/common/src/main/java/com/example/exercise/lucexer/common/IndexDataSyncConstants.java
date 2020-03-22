@@ -1,4 +1,4 @@
-package com.example.exercise.lucexer.sync;
+package com.example.exercise.lucexer.common;
 
 /**
  * IndexDataSyncConstants
@@ -17,5 +17,6 @@ public class IndexDataSyncConstants {
     public static final String SYNC_TYPE_FULL = "FULL";
 
     public static final String SYNC_TYPE_INCREMENTAL = "INCREMENTAL";
+
 
 }
